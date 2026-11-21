@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FindIt - Lost & Found Portal</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f4f7fc;
+    color: #183153;
+}
+
+header {
+    background: white;
+    padding: 20px 7%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px #dce4ef;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: bold;
+    color: #1769aa;
+}
+
+nav a {
+    text-decoration: none;
+    color: #183153;
+    margin-left: 22px;
+    font-weight: bold;
+}
+
+.hero {
+    text-align: center;
+    padding: 75px 20px;
+    background: linear-gradient(135deg, #1769aa, #56a8e8);
+    color: white;
+}
+
+.hero h1 {
+    font-size: 42px;
+    margin-bottom: 15px;
+}
+
+.hero p {
+    font-size: 18px;
+    margin-bottom: 28px;
+}
+
+.search-box {
+    max-width: 550px;
+    margin: auto;
+    display: flex;
+}
+
+.search-box input {
+    flex: 1;
+    padding: 15px;
+    border: none;
+    border-radius: 8px 0 0 8px;
+    font-size: 16px;
+}
+
+.search-box button {
+    padding: 15px 22px;
+    border: none;
+    background: #ffbd39;
+    color: #183153;
+    font-weight: bold;
+    border-radius: 0 8px 8px 0;
+    cursor: pointer;
+}
+
+.actions {
+    text-align: center;
+    padding: 35px 15px;
+}
+
+.actions button {
+    padding: 14px 25px;
+    margin: 10px;
+    border: none;
+    border-radius: 7px;
+    background: #1769aa;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.actions button:hover {
+    background: #104b7c;
+}
+
+section.items {
+    padding: 25px 7% 60px;
+}
+
+.items h2 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.item-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+.item-card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px #dce4ef;
+}
+
+.item-card h3 {
+    color: #1769aa;
+    margin-bottom: 12px;
+}
+
+.item-card p {
+    margin: 8px 0;
+    color: #52657b;
+}
+
+.status {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: #e2f2ff;
+    color: #1769aa;
+    font-size: 13px;
+}
+
+footer {
+    background: #183153;
+    color: white;
+    text-align: center;
+    padding: 22px;
+}
+
+@media(max-width: 600px) {
+    header {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    nav a {
+        margin: 0 7px;
+    }
+
+    .hero h1 {
+        font-size: 32px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">FindIt 🔎</div>
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#actions">Report Item</a>
+        <a href="#items">Browse Items</a>
+    </nav>
+</header>
+
+<div class="hero" id="home">
+    <h1>Lost Something? Find It Here!</h1>
+    <p>Helping lost belongings find their way home.</p>
+
+    <div class="search-box">
+        <input type="text" id="searchInput"
+        placeholder="Search for an item...">
+        <button onclick="searchItems()">Search</button>
+    </div>
+</div>
+
+<div class="actions" id="actions">
+    <h2>How can we help you?</h2>
+<button onclick="showForm('Lost')">
+    Report Lost Item
+</button>
+    <button onclick="showForm('Found')">Report Found Item</button>
+</div>
+
+<section id="reportSection" style="display:none; padding:25px 7%;">
+    <h2 id="formTitle">Report an Item</h2>
+    <form id="itemForm" style="max-width:500px; margin:20px auto; background:white; padding:25px; border-radius:12px;">
+        <input type="hidden" id="itemType">
+
+        <label>Item name</label><br>
+        <input id="itemName" required placeholder="Example: Blue backpack"
+        style="width:100%;padding:12px;margin:8px 0 15px;"><br>
+
+        <label>Location</label><br>
+        <input id="itemLocation" required placeholder="Where was it lost or found?"
+        style="width:100%;padding:12px;margin:8px 0 15px;"><br>
+        <label>Date Lost / Found</label><br>
+
+<input
+    type="date"
+    id="itemDate"
+    required
+    style="width:100%;padding:12px;margin:8px 0 15px;"
+>
+<br>
+
+        <label>Description</label><br>
+        <textarea id="itemDescription" required placeholder="Describe the item"
+style="width:100%;padding:12px;margin:8px 0 15px;"></textarea><br>
+<label>Upload Item Photo</label><br>
+
+<input
+    type="file"
+    id="itemPhoto"
+    accept="image/*"
+    style="margin:10px 0 15px;"
+>
+
+<img
+    id="photoPreview"
+    style="display:none;width:180px;margin:10px 0;border-radius:10px;"
+>
+<br>
+
+        <button type="submit" style="padding:12px 20px;background:#1769aa;color:white;border:0;border-radius:7px;cursor:pointer;">Submit Report</button>
+        <button type="button" onclick="closeForm()" style="padding:12px 20px;border:0;border-radius:7px;cursor:pointer;">Cancel</button>
+    </form>
+</section>
+
+<section class="items" id="items">
+    <h2>Recently Reported Items</h2>
+    <div class="item-list" id="itemList">
+        <div class="item-card">
+            <h3>📱 Mobile Phone</h3>
+            <p>Location: College Library</p>
+            <p>Black smartphone</p>
+            <span class="status">Lost</span>
+        </div>
+
+        <div class="item-card">
+            <h3>🎒 Backpack</h3>
+            <p>Location: Classroom</p>
+            <p>Blue school backpack</p>
+            <span class="status">Found</span>
+        </div>
+
+        <div class="item-card">
+            <h3>🔑 Keys</h3>
+            <p>Location: College Garden</p>
+            <p>Set of keys with a keychain</p>
+            <span class="status">Lost</span>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <p>© 2026 FindIt | Lost & Found Portal</p>
+    <p>Bringing lost belongings back home.</p>
+</footer>
+
+<script>
+let reports = JSON.parse(
+    localStorage.getItem("finditReports") || "[]"
+);
+let selectedImage = "";
+
+document.getElementById("itemPhoto").addEventListener("change", function() {
+    const file = this.files[0];
+
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+        alert("Please select an image.");
+        return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+        alert("Please select an image smaller than 2 MB.");
+        this.value = "";
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+        selectedImage = event.target.result;
+
+        const preview = document.getElementById("photoPreview");
+        preview.src = selectedImage;
+        preview.style.display = "block";
+    };
+
+    reader.readAsDataURL(file);
+});
+
+window.showForm = function(type) {
+    const section = document.getElementById("reportSection");
+    const title = document.getElementById("formTitle");
+    const itemType = document.getElementById("itemType");
+
+    if (!section || !title || !itemType) {
+        alert("Report form section is missing!");
+        return;
+    }
+
+    section.style.display = "block";
+    title.innerText = "Report " + type + " Item";
+    itemType.value = type;
+
+    section.scrollIntoView({behavior: "smooth"});
+};
+
+function closeForm() {
+    document.getElementById("reportSection").style.display = "none";
+}
+
+document.getElementById("itemForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const report = {
+    name: document.getElementById("itemName").value,
+    location: document.getElementById("itemLocation").value,
+    date: document.getElementById("itemDate").value,
+    description: document.getElementById("itemDescription").value,
+    type: document.getElementById("itemType").value,
+    image: selectedImage
+};
+
+    reports.push(report);
+
+localStorage.setItem(
+    "finditReports",
+    JSON.stringify(reports)
+);
+
+displayReports();
+
+    this.reset();
+    closeForm();
+    alert("Your report was added successfully!");
+});
+
+function displayReports() {
+    const list = document.getElementById("itemList");
+    list.innerHTML = "";
+
+    reports.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "item-card";
+
+        if (item.image) {
+            const photo = document.createElement("img");
+            photo.src = item.image;
+            photo.style.width = "100%";
+            photo.style.maxHeight = "180px";
+            photo.style.objectFit = "contain";
+            photo.style.borderRadius = "10px";
+            photo.style.marginBottom = "12px";
+            card.appendChild(photo);
+        }
+
+        const heading = document.createElement("h3");
+        heading.textContent = item.name;
+
+        const location = document.createElement("p");
+        location.textContent = "Location: " + item.location;
+const date = document.createElement("p");
+date.textContent = "Date: " + (item.date || "Not provided");
+        const description = document.createElement("p");
+        description.textContent = item.description;
+
+        const status = document.createElement("span");
+        status.className = "status";
+        status.textContent = item.type;
+
+        card.append(heading, location,date, description, status);
+        list.appendChild(card);
+    });
+}
+
+function searchItems() {
+    const query = document.getElementById("searchInput")
+        .value.trim().toLowerCase();
+
+    const list = document.getElementById("itemList");
+    list.innerHTML = "";
+
+    const demoItems = [
+        {name:"Mobile Phone", location:"College Library",
+        description:"Black smartphone", type:"Lost"},
+        {name:"Backpack", location:"Classroom",
+        description:"Blue school backpack", type:"Found"},
+        {name:"Keys", location:"College Garden",
+        description:"Set of keys with a keychain", type:"Lost"}
+    ];
+
+    const allItems = [...demoItems, ...reports];
+
+    const results = allItems.filter(item =>
+        (item.name + " " + item.location + " " +
+        item.description + " " + item.type)
+        .toLowerCase().includes(query)
+    );
+
+    results.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "item-card";
+
+        const heading = document.createElement("h3");
+        heading.textContent = item.name;
+
+        const location = document.createElement("p");
+        location.textContent = "Location: " + item.location;
+
+        const description = document.createElement("p");
+        description.textContent = item.description;
+
+        const status = document.createElement("span");
+        status.className = "status";
+        status.textContent = item.type;
+
+        card.append(heading, location, description, status);
+        list.appendChild(card);
+    });
+
+    if (results.length === 0) {
+        list.textContent = "No matching items found.";
+    }
+
+    document.getElementById("items").scrollIntoView();
+}
+window.addEventListener("load", function() {
+    if (reports.length > 0) {
+        displayReports();
+    }
+});
+</script>
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyA5E8Y-v0RiyJ_jk3PC3lDKk_OrIpojTxc",
+    authDomain: "findit-lost-and-found-47039.firebaseapp.com",
+    projectId: "findit-lost-and-found-47039",
+    storageBucket: "findit-lost-and-found-47039.firebasestorage.app",
+    messagingSenderId: "575113872762",
+    appId: "1:575113872762:web:6df104a1906b78a22c42c3",
+    measurementId: "G-V3VV5S6PPM"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
+</body>
+</html>
